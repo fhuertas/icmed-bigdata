@@ -1,6 +1,7 @@
-package com.fhuertas.uah.angdv.gen.runner
-import com.fhuertas.uah.angdv.gen.SimpleGens
-import com.fhuertas.uah.angdv.gen.kafka.KafkaBuilder
+package com.fhuertas.icemd.bigdata2019.gen.runner
+
+import com.fhuertas.icemd.bigdata2019.gen.SimpleGens
+import com.fhuertas.icemd.bigdata2019.kafka.KafkaBuilder
 import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.LazyLogging
 import org.scalacheck.Gen
@@ -10,7 +11,7 @@ import scala.concurrent.duration.Duration
 import scala.util.Try
 
 object BootText extends App with LazyLogging {
-  import com.fhuertas.uah.angdv.gen.config.KafkaConfigNs._
+  import com.fhuertas.icemd.bigdata2019.config.KafkaConfigNs._
   // namespaces
   val nsBootText = "generator.text"
 

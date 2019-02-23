@@ -1,4 +1,5 @@
-package com.fhuertas.uah.angdv.gen
+package com.fhuertas.icemd.bigdata2019.gen
+
 import org.scalacheck.Gen
 
 object SimpleGens {
