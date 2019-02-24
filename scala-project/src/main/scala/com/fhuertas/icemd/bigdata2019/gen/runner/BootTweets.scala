@@ -2,6 +2,7 @@ package com.fhuertas.icemd.bigdata2019.gen.runner
 
 import java.io.{ BufferedReader, FileInputStream, InputStreamReader }
 
+import akka.actor.ActorSystem
 import com.fhuertas.icemd.bigdata2019.config.KafkaConfigNs.Producer
 import com.fhuertas.icemd.bigdata2019.kafka.KafkaBuilder
 import com.fhuertas.icemd.bigdata2019.utils.TimeReader
@@ -9,15 +10,14 @@ import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.kafka.clients.producer.ProducerRecord
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.{ Duration, _ }
-import scala.concurrent.{ Await, Future, Promise }
-import scala.util.Try
+import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.duration._
 
 object BootTweets extends App with LazyLogging {
 
-  def delay(time: Long): Try[Future[Nothing]] =
-    Try(Await.ready(Promise().future, time millis))
+  val actorSystem                                 = ActorSystem()
+  val scheduler                                   = actorSystem.scheduler
+  implicit val executor: ExecutionContextExecutor = actorSystem.dispatcher
 
   val TwitterNS = "generator.twitter.file"
 
@@ -53,14 +53,21 @@ object BootTweets extends App with LazyLogging {
   val time   = tweets.headOption.map(_.delay).map(tweets.last.delay - _).getOrElse(0L) / 1000L / factor
   logger.info(s"Start publish. total time $time s. Events ${tweets.length}")
 
-  val futures = tweets.zipWithIndex.map {
+  tweets.zipWithIndex.foreach {
     case (t, k) ⇒
-      Future {
-        delay(t.delay / 1000000)
-        logger.debug(s"Publish ID: $k, delay: ${t.delay}, event: ${t.event}")
+      scheduler.scheduleOnce(t.delay / factor millis)({
+        logger.debug(s"Publish ID: $k, delay: ${t.delay}")
+        logger.trace(s"Event: ${t.event}")
         producer.send(new ProducerRecord[String, String](topic, t.id, t.event))
-      }
+      })
   }
-  Await.result(Future.sequence(futures), Duration.Inf)
+
+  tweets.lastOption
+    .map { last ⇒
+      scheduler.scheduleOnce((last.delay / factor) + 1000 millis)({
+        logger.info("Exiting...")
+        System.exit(0)
+      })
+    }
 
 }

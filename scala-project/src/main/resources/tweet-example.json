@@ -1,0 +1,148 @@
+{
+  "createdAt": "Oct 27, 2014 9:59:59 PM",
+  "id": 526840759652458496,
+  "text": "Basta ya de corrupción\nExigimos dimisión a la casta política\nFuera @PPopular @PSOE \nQueremos justicia http://t.co/V2L48rx7vG",
+  "source": "\u003ca href\u003d\"http://twitter.com/download/android\" rel\u003d\"nofollow\"\u003eTwitter for Android\u003c/a\u003e",
+  "isTruncated": false,
+  "inReplyToStatusId": -1,
+  "inReplyToUserId": -1,
+  "isFavorited": false,
+  "isRetweeted": false,
+  "favoriteCount": 0,
+  "retweetCount": 0,
+  "isPossiblySensitive": false,
+  "lang": "es",
+  "contributorsIDs": [
+  ],
+  "userMentionEntities": [
+    {
+      "name": "Partido Popular",
+      "screenName": "PPopular",
+      "id": 20509689,
+      "start": 67,
+      "end": 76
+    },
+    {
+      "name": "PSOE",
+      "screenName": "PSOE",
+      "id": 50982086,
+      "start": 77,
+      "end": 82
+    }
+  ],
+  "urlEntities": [
+  ],
+  "hashtagEntities": [
+  ],
+  "mediaEntities": [
+    {
+      "id": 526840758301491200,
+      "url": "http://t.co/V2L48rx7vG",
+      "mediaURL": "http://pbs.twimg.com/media/B0-24NvCAAAMSlR.jpg",
+      "mediaURLHttps": "https://pbs.twimg.com/media/B0-24NvCAAAMSlR.jpg",
+      "expandedURL": "http://twitter.com/pherran96/status/526840759652458496/photo/1",
+      "displayURL": "pic.twitter.com/V2L48rx7vG",
+      "sizes": {
+        "0": {
+          "width": 150,
+          "height": 150,
+          "resize": 101
+        },
+        "1": {
+          "width": 340,
+          "height": 328,
+          "resize": 100
+        },
+        "2": {
+          "width": 431,
+          "height": 417,
+          "resize": 100
+        },
+        "3": {
+          "width": 431,
+          "height": 417,
+          "resize": 100
+        }
+      },
+      "type": "photo",
+      "start": 102,
+      "end": 124
+    }
+  ],
+  "extendedMediaEntities": [
+    {
+      "id": 526840758301491200,
+      "url": "http://t.co/V2L48rx7vG",
+      "mediaURL": "http://pbs.twimg.com/media/B0-24NvCAAAMSlR.jpg",
+      "mediaURLHttps": "https://pbs.twimg.com/media/B0-24NvCAAAMSlR.jpg",
+      "expandedURL": "http://twitter.com/pherran96/status/526840759652458496/photo/1",
+      "displayURL": "pic.twitter.com/V2L48rx7vG",
+      "sizes": {
+        "0": {
+          "width": 150,
+          "height": 150,
+          "resize": 101
+        },
+        "1": {
+          "width": 340,
+          "height": 328,
+          "resize": 100
+        },
+        "2": {
+          "width": 431,
+          "height": 417,
+          "resize": 100
+        },
+        "3": {
+          "width": 431,
+          "height": 417,
+          "resize": 100
+        }
+      },
+      "type": "photo",
+      "start": 102,
+      "end": 124
+    }
+  ],
+  "symbolEntities": [
+  ],
+  "currentUserRetweetId": -1,
+  "user": {
+    "id": 2251642575,
+    "name": "Pilar Herran Barredo",
+    "screenName": "pherran96",
+    "location": "",
+    "description": "Persona amiga de sus amigos Amante de la libertad",
+    "descriptionURLEntities": [
+    ],
+    "isContributorsEnabled": false,
+    "profileImageUrl": "http://pbs.twimg.com/profile_images/521586667162202113/SMNbDJLV_normal.jpeg",
+    "profileImageUrlHttps": "https://pbs.twimg.com/profile_images/521586667162202113/SMNbDJLV_normal.jpeg",
+    "isDefaultProfileImage": false,
+    "isProtected": false,
+    "followersCount": 1712,
+    "profileBackgroundColor": "C0DEED",
+    "profileTextColor": "333333",
+    "profileLinkColor": "0084B4",
+    "profileSidebarFillColor": "DDEEF6",
+    "profileSidebarBorderColor": "C0DEED",
+    "profileUseBackgroundImage": true,
+    "isDefaultProfile": true,
+    "showAllInlineMedia": false,
+    "friendsCount": 1671,
+    "createdAt": "Dec 30, 2013 9:50:52 AM",
+    "favouritesCount": 9379,
+    "utcOffset": -1,
+    "profileBackgroundImageUrl": "http://abs.twimg.com/images/themes/theme1/bg.png",
+    "profileBackgroundImageUrlHttps": "https://abs.twimg.com/images/themes/theme1/bg.png",
+    "profileBannerImageUrl": "https://pbs.twimg.com/profile_banners/2251642575/1390462837",
+    "profileBackgroundTiled": false,
+    "lang": "es",
+    "statusesCount": 15910,
+    "isGeoEnabled": false,
+    "isVerified": false,
+    "translator": false,
+    "listedCount": 14,
+    "isFollowRequestSent": false
+  }
+}
