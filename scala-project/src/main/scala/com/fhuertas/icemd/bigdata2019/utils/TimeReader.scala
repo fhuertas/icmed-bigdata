@@ -9,7 +9,7 @@ import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.typesafe.scalalogging.LazyLogging
 
 import scala.annotation.tailrec
-// /home/fhuertas/Projects/personal/icemd-bigdata/other-files/tweets
+
 object TimeReader extends LazyLogging {
 
   // "Oct 27, 2014 10:00:00 PM"
