@@ -1,0 +1,9 @@
+connector.class=io.confluent.connect.elasticsearch.ElasticsearchSinkConnector
+type.name=kafka-connect
+tasks.max=1
+topics=tweets-out
+value.converter.schemas.enable=false
+connection.url=http://elasticsearch:9200
+key.ignore=true
+value.converter=org.apache.kafka.connect.json.JsonConverter
+schema.ignore=true

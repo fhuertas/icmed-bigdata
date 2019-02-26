@@ -2,7 +2,8 @@ package com.fhuertas.icemd.bigdata2019.boot
 
 import java.util.Properties
 
-import com.fhuertas.icemd.bigdata2019.config.{ ConfigLoader, KafkaStreamsEjNs }
+import com.fhuertas.icemd.bigdata2019.TwitterFunctions
+import com.fhuertas.icemd.bigdata2019.config.{ConfigLoader, KafkaStreamsEjNs}
 import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.kafka.streams.KafkaStreams
@@ -16,7 +17,7 @@ import scala.concurrent.duration._
 object KStreamsRunner extends App with LazyLogging {
   import org.apache.kafka.streams.scala.ImplicitConversions._
   import org.apache.kafka.streams.scala.Serdes._
-  import com.fhuertas.icemd.bigdata2019.utils.JsonUtils._
+  import com.fhuertas.icemd.bigdata2019.dsl.JsonUtils._
 
   val config = ConfigFactory.load().getConfig(KafkaStreamsEjNs.RootNs)
 
@@ -29,8 +30,8 @@ object KStreamsRunner extends App with LazyLogging {
   }
 
 //  val properties = new Properties()
-//  properties.put("application.id", "k-stream-app")
-//  properties.put("bootstrap.servers", "localhost:19092,localhost:29092,localhost:39092")
+//  properties.put("application.id", s"G${System.currentTimeMillis}")
+//  properties.put("bootstrap.servers", "broker:9092")
 //  properties.put("auto.offset.reset", "earliest")
 
   val inputTopic  = config.getString(KafkaStreamsEjNs.TopicInput)
@@ -41,18 +42,10 @@ object KStreamsRunner extends App with LazyLogging {
   val builder                            = new StreamsBuilder()
   val textLines: KStream[String, String] = builder.stream[String, String](inputTopic)
 
-  val users: KTable[String, String] = textLines
-    .map { (_, body) ⇒
-      val json  = body.toJson
-      val key   = json.path("user.id").extract[String]
-      val value = json.path("user").asJsonString
-      (key, value)
-    }
-    .groupByKey
-    .reduce((_, v) ⇒ v)
+  val tweetsWithKey = TwitterFunctions.publishTweetsWithUserKey(textLines)
 
-  textLines.to(outputTopic)
-  users.toStream.to("users")
+  tweetsWithKey.to("tweets")
+
   val streams: KafkaStreams = new KafkaStreams(builder.build(), properties)
 
   streams.cleanUp()
