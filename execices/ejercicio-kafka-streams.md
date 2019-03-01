@@ -6,6 +6,7 @@ Motor de transformaciones sobre kafka
 * Los streams son inmutables.
 * No necesita mas infraestructura que el propio kafka
 * Las transformaciones son ejecutadas dentro del cluster de kafka
+* Soporta operaciones con ventanas
 
 ## Ejercicio
 

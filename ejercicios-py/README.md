@@ -63,7 +63,7 @@ from pyspark.sql.functions import split
 # o delegarlas a la llamada de spark-submit
 spark = SparkSession \
     .builder \
-    .appName("StructuredNetworkWordCount")
+    .appName("StructuredNetworkWordCount") \
     .getOrCreate()
 
 # Creando el source de datos. y lo transforma en un dataset en streaming
@@ -112,7 +112,3 @@ query = word_counts \
 # (que puede no ser hasta que falle)
 query.awaitTermination()
 ```
-
-## Ejercicio 2
-
-A partir de un topic con mensajes de tweeter, construir un dataset con las columnas que queramos
