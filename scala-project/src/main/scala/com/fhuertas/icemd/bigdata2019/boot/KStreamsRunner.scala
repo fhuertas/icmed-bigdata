@@ -42,7 +42,7 @@ object KStreamsRunner extends App with LazyLogging {
   val builder                            = new StreamsBuilder()
   val textLines: KStream[String, String] = builder.stream[String, String](inputTopic)
 
-  val tweetsWithKey = TwitterFunctions.changeKeyFromJsonField(textLines, "id")
+  val tweetsWithKey = TwitterFunctions.changeKeyFromJsonField(textLines, args(0))
 
   tweetsWithKey.to(outputTopic)
 
