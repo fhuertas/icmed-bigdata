@@ -10,11 +10,11 @@ import scala.compat.java8.DurationConverters._
 import scala.concurrent.duration._
 import scala.util.Random
 
-object Examples {
+object Examples extends App {
 
   def consumerExample(): Unit = {
     val consumerProperties = new Properties()
-    consumerProperties.setProperty("bootstrap.servers", "localhost:9092")
+    consumerProperties.setProperty("bootstrap.servers", "localhost:19092")
     consumerProperties.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     consumerProperties.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
     consumerProperties.setProperty("group.id", s"${System.currentTimeMillis}")
@@ -41,4 +41,7 @@ object Examples {
       Thread.sleep(1.second.toMillis)
     }
   }
+
+  consumerExample()
+
 }
