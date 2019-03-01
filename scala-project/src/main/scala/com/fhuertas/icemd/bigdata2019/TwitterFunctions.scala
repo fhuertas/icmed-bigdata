@@ -40,7 +40,7 @@ object TwitterFunctions {
       .groupByKey
       .reduce((_, r) ⇒ r)
 
-  def publishTweetsWithUserKey(tweets: KStream[String, String]): KStream[String, String] =
-    tweets.map((_, body) ⇒ (body.toJson.path("user.id").extract[String], body))
+  def changeKeyFromJsonField(tweets: KStream[String, String], idPath: String): KStream[String, String] =
+    tweets.map((_, body) ⇒ (body.toJson.path(idPath).extract[String], body))
 
 }

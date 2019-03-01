@@ -57,7 +57,8 @@ object BootTweets extends App with LazyLogging {
     case (t, k) ⇒
       scheduler.scheduleOnce(t.delay / factor millis)({
         logger.debug(s"Publish ID: $k, delay: ${t.delay}")
-        logger.trace(s"Event: ${t.event}")
+        val bodyPrint = if (t.event.length < 80) t.event else s"${t.event.take(80)}..."
+        logger.info(s"Event: $bodyPrint")
         producer.send(new ProducerRecord[String, String](topic, t.id, t.event))
       })
   }
