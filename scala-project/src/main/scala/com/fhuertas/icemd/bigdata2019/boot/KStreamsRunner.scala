@@ -3,7 +3,7 @@ package com.fhuertas.icemd.bigdata2019.boot
 import java.util.Properties
 
 import com.fhuertas.icemd.bigdata2019.TwitterFunctions
-import com.fhuertas.icemd.bigdata2019.config.{ConfigLoader, KafkaStreamsEjNs}
+import com.fhuertas.icemd.bigdata2019.config.{ ConfigLoader, KafkaStreamsEjNs }
 import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.kafka.streams.KafkaStreams
@@ -35,12 +35,10 @@ object KStreamsRunner extends App with LazyLogging {
 //  properties.put("bootstrap.servers", "broker:9092")
 //  properties.put("auto.offset.reset", "earliest")
 
-
-
   // kafka-streams.topics.input
-  val inputTopic  = config.getString(KafkaStreamsEjNs.TopicInput)
+  val inputTopic = config.getString(KafkaStreamsEjNs.TopicInput)
   // kafka-streams.topics.input2
-  val inputTopic2  = config.getString(KafkaStreamsEjNs.TopicInput2)
+  val inputTopic2 = config.getString(KafkaStreamsEjNs.TopicInput2)
   // kafka-streams.topics.output
   val outputTopic = config.getString(KafkaStreamsEjNs.TopicOutput)
 
@@ -48,10 +46,12 @@ object KStreamsRunner extends App with LazyLogging {
 
   val builder                            = new StreamsBuilder()
   val textLines: KStream[String, String] = builder.stream[String, String](inputTopic)
-  val users: KTable[String, String] = builder.table[String, String](inputTopic2)
+  val users: KStream[String, String]     = builder.stream[String, String](inputTopic2)
+//  textLines.join(users)
+//  val tweetsWithKey = TwitterFunctions.changeKeyFromJsonField(textLines, args(0))
+  val kUsers = users.map((_, body) ⇒ (body.toJson.path("id").extract[String], body)).groupByKey.reduce((_, R) ⇒ R)
 
-  val tweetsWithKey = TwitterFunctions.changeKeyFromJsonField(textLines, args(0))
-  val userFilter = users.filter((key, body) => {
+  val userFilter = kUsers.filter((_, body) ⇒ {
 //    (key, body.toJson)
     Try(body.toJson.path("followersCount").extract[Int] > 400).toOption.nonEmpty
   })
