@@ -13,6 +13,7 @@ import org.apache.kafka.streams.scala.kstream._
 import scala.collection.JavaConverters._
 import scala.compat.java8.DurationConverters._
 import scala.concurrent.duration._
+import scala.util.Try
 
 object KStreamsRunner extends App with LazyLogging {
   import org.apache.kafka.streams.scala.ImplicitConversions._
@@ -50,9 +51,12 @@ object KStreamsRunner extends App with LazyLogging {
   val users: KTable[String, String] = builder.table[String, String](inputTopic2)
 
   val tweetsWithKey = TwitterFunctions.changeKeyFromJsonField(textLines, args(0))
-
-  tweetsWithKey.to(outputTopic)
-
+  val userFilter = users.filter((key, body) => {
+//    (key, body.toJson)
+    Try(body.toJson.path("followersCount").extract[Int] > 400).toOption.nonEmpty
+  })
+//  tweetsWithKey.to(outputTopic)
+  userFilter.toStream.to(outputTopic)
   val streams: KafkaStreams = new KafkaStreams(builder.build(), properties)
 
   streams.cleanUp()
