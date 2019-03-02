@@ -25,6 +25,7 @@ object KStreamsRunner extends App with LazyLogging {
   val properties = {
     val p = new Properties()
     p.putAll(kafkaConfig.asJava)
+    p.put("application.id",s"${System.currentTimeMillis()}-fhuertas-app")
     p
   }
 
@@ -49,7 +50,7 @@ object KStreamsRunner extends App with LazyLogging {
   val tweetsWithKey = tweets.map((_, body) ⇒ {
     val userId  = body.toJson.path("user.id").extract[String]
     val id      = body.toJson.path("id").extract[String]
-    val text    = body.toJson.path("createdAt").extract[String]
+    val text    = body.toJson.path("text").extract[String]
     val newBody = s"""{"userId":"$userId","id":"$id","text":"$text"}"""
     (userId, newBody)
   })
