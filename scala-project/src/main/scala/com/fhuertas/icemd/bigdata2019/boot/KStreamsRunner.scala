@@ -2,7 +2,6 @@ package com.fhuertas.icemd.bigdata2019.boot
 
 import java.util.Properties
 
-import com.fhuertas.icemd.bigdata2019.TwitterFunctions
 import com.fhuertas.icemd.bigdata2019.config.{ ConfigLoader, KafkaStreamsEjNs }
 import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.LazyLogging
@@ -13,12 +12,11 @@ import org.apache.kafka.streams.scala.kstream._
 import scala.collection.JavaConverters._
 import scala.compat.java8.DurationConverters._
 import scala.concurrent.duration._
-import scala.util.Try
 
 object KStreamsRunner extends App with LazyLogging {
+  import com.fhuertas.icemd.bigdata2019.dsl.JsonUtils._
   import org.apache.kafka.streams.scala.ImplicitConversions._
   import org.apache.kafka.streams.scala.Serdes._
-  import com.fhuertas.icemd.bigdata2019.dsl.JsonUtils._
 
   val config = ConfigFactory.load().getConfig(KafkaStreamsEjNs.RootNs)
 
@@ -44,27 +42,29 @@ object KStreamsRunner extends App with LazyLogging {
 
   logger.info(s"Word count exercise: Reading from $inputTopic. Result write to $outputTopic")
 
-  val builder                            = new StreamsBuilder()
+  val builder                         = new StreamsBuilder()
   val tweets: KStream[String, String] = builder.stream[String, String](inputTopic)
-  val users: KStream[String, String]     = builder.stream[String, String](inputTopic2)
-//  textLines.join(users)
-  val tweetsWithKey = tweets.map((_,body) => {
-    val key = body.toJson.path("user.id").extract[String]
-    (key,body)
+  val users: KStream[String, String]  = builder.stream[String, String](inputTopic2)
+
+  val tweetsWithKey = tweets.map((_, body) ⇒ {
+    val userId  = body.toJson.path("user.id").extract[String]
+    val id      = body.toJson.path("id").extract[String]
+    val text    = body.toJson.path("createdAt").extract[String]
+    val newBody = s"""{"userId":"$userId","id":"$id","text":"$text"}"""
+    (userId, newBody)
   })
 
-  val kUsers = users.map((_, body) ⇒ (body.toJson.path("id").extract[String], body)).groupByKey.reduce((_, R) ⇒ R)
+  val kUsers = users
+    .map((_, body) ⇒ (body.toJson.path("id").extract[String], body))
+    .groupByKey
+    .reduce((_, R) ⇒ R)
 
-//  val userFilter = kUsers.filter((_, body) ⇒ {
-////    (key, body.toJson)
-//    Try(body.toJson.path("followersCount").extract[Int] > 400).toOption.nonEmpty
-//  })
+  val resultado = tweetsWithKey.join(kUsers)((left, right) ⇒ s"""{"left":"$left","right":"$right"}""".stripMargin)
 
-  val resultado = tweetsWithKey.join(kUsers)((left,right) =>
-    s"""{"left": $left,"right": $right}""".stripMargin)
-//  tweetsWithKey.to(outputTopic)
+  tweetsWithKey.to(s"$outputTopic-tweets")
+  kUsers.toStream.to(s"$outputTopic-users")
+  resultado.to(s"$outputTopic-join")
 
-  resultado.to(outputTopic)
   val streams: KafkaStreams = new KafkaStreams(builder.build(), properties)
 
   streams.cleanUp()
