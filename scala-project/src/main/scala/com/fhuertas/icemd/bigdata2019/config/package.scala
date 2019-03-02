@@ -16,6 +16,7 @@ package object config {
     val RootNs = "kafka-streams"
     val KafkaClient = "kafka-clients"
     val TopicInput = "topics.input"
+    val TopicInput2 = "topics.input2"
     val TopicOutput = "topics.output"
   }
 

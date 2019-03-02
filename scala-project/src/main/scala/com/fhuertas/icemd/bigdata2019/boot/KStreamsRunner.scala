@@ -34,13 +34,20 @@ object KStreamsRunner extends App with LazyLogging {
 //  properties.put("bootstrap.servers", "broker:9092")
 //  properties.put("auto.offset.reset", "earliest")
 
+
+
+  // kafka-streams.topics.input
   val inputTopic  = config.getString(KafkaStreamsEjNs.TopicInput)
+  // kafka-streams.topics.input2
+  val inputTopic2  = config.getString(KafkaStreamsEjNs.TopicInput2)
+  // kafka-streams.topics.output
   val outputTopic = config.getString(KafkaStreamsEjNs.TopicOutput)
 
   logger.info(s"Word count exercise: Reading from $inputTopic. Result write to $outputTopic")
 
   val builder                            = new StreamsBuilder()
   val textLines: KStream[String, String] = builder.stream[String, String](inputTopic)
+  val users: KTable[String, String] = builder.table[String, String](inputTopic2)
 
   val tweetsWithKey = TwitterFunctions.changeKeyFromJsonField(textLines, args(0))
 
