@@ -45,18 +45,26 @@ object KStreamsRunner extends App with LazyLogging {
   logger.info(s"Word count exercise: Reading from $inputTopic. Result write to $outputTopic")
 
   val builder                            = new StreamsBuilder()
-  val textLines: KStream[String, String] = builder.stream[String, String](inputTopic)
+  val tweets: KStream[String, String] = builder.stream[String, String](inputTopic)
   val users: KStream[String, String]     = builder.stream[String, String](inputTopic2)
 //  textLines.join(users)
-//  val tweetsWithKey = TwitterFunctions.changeKeyFromJsonField(textLines, args(0))
+  val tweetsWithKey = tweets.map((_,body) => {
+    val key = body.toJson.path("user.id").extract[String]
+    (key,body)
+  })
+
   val kUsers = users.map((_, body) ⇒ (body.toJson.path("id").extract[String], body)).groupByKey.reduce((_, R) ⇒ R)
 
-  val userFilter = kUsers.filter((_, body) ⇒ {
-//    (key, body.toJson)
-    Try(body.toJson.path("followersCount").extract[Int] > 400).toOption.nonEmpty
-  })
+//  val userFilter = kUsers.filter((_, body) ⇒ {
+////    (key, body.toJson)
+//    Try(body.toJson.path("followersCount").extract[Int] > 400).toOption.nonEmpty
+//  })
+
+  val resultado = tweetsWithKey.join(kUsers)((left,right) =>
+    s"""{"left": $left,"right": $right}""".stripMargin)
 //  tweetsWithKey.to(outputTopic)
-  userFilter.toStream.to(outputTopic)
+
+  resultado.to(outputTopic)
   val streams: KafkaStreams = new KafkaStreams(builder.build(), properties)
 
   streams.cleanUp()
